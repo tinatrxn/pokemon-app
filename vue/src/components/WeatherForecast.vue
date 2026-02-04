@@ -1,53 +1,80 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-type WeatherForecastItem = {
-  date: string;
-  temperatureC: number;
-  temperatureF: number;
-  summary: string;
+type BinderItem = {
+  binderId: number;
+  name: string;
+  cardCount: number;
+  pokemonCard: BinderCardsItem[];
 };
 
-const forecasts = ref<WeatherForecastItem[]>();
+type BinderCardsItem = {
+  pokemonCardId: number;
+  name: string;
+  set: string;
+  number: string;
+};
+
+const binders = ref<BinderItem[]>();
+// const binderCards = ref<BinderCardsItem[]>();
 const error = ref<string>();
 const loading = ref(false);
 
 
 onMounted(async () => {
-  await fetchForecasts();
+  await fetchBinders();
 });
 
-async function fetchForecasts() {
+async function fetchBinders() {
   loading.value = true;
   try {
-    const response = await fetch('https://localhost:7221/WeatherForecast');
-    forecasts.value = await response.json();
+    const response = await fetch('https://localhost:7221/Binders');
+    binders.value = await response.json();
   } catch (err) {
     error.value = err instanceof Error ? err.message : String(err);
   } finally {
     loading.value = false;
   }
 }
+
+// async function fetchBinderCards() {
+//   loading.value = true;
+//   try {
+//     const response = await fetch('https://localhost:7221/Binders');
+//     binders.value = await response.json();
+//   } catch (err) {
+//     error.value = err instanceof Error ? err.message : String(err);
+//   } finally {
+//     loading.value = false;
+//   }
+// }
 </script>
 
 <template>
   <div class="weather-app">
     <h1>
-      Weather Forecast 
-      <button v-if="!loading" @click="fetchForecasts" class="refresh-button">Refresh</button>
+      Weather Forecast
+      <button v-if="!loading" @click="fetchBinders" class="refresh-button">Refresh</button>
     </h1>
 
     <div v-if="loading" class="loading">Loading...</div>
     <div v-else-if="error" class="error">Error: {{ error }}</div>
     <div v-else class="forecast-container">
-      <div 
-        v-for="forecast in forecasts" 
-        :key="forecast.date"
+      <div
+        v-for="binder in binders"
+        :key="binder.binderId"
         class="forecast-card"
       >
-        <div class="date">{{ new Date(forecast.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) }}</div>
-        <div class="temperature">{{ Math.round(forecast.temperatureC) }}°C</div>
-        <div class="summary">{{ forecast.summary }}</div>
-        <div class="temp-range">{{ Math.round(forecast.temperatureF) }}°F</div>
+        <!-- <div class="date">{{ new Date(forecast.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) }}</div>> -->
+        <div class="temperature">{{ binder.name }}</div>
+        <div class="summary">{{ binder.cardCount }}</div>
+        <div
+          v-for="card in binder.pokemonCard"
+          :key="card.pokemonCardId"
+          class="forecast-card">
+          <p>{{ card.name }}</p>
+          <p>{{ card.set }}</p>
+          <p>{{ card.number }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -80,7 +107,7 @@ h1 {
 .forecast-container {
   display: flex;
   gap: 1rem;
-  overflow-x: auto;
+  /* overflow-x: auto; */
   padding: 1rem 0;
 }
 
