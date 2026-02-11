@@ -9,6 +9,10 @@ namespace api.Profiles
             CreateMap<Entities.PokemonCard, Models.PokemonCardDto>();
             CreateMap<Entities.PokemonCard, Models.PokemonCardCreationDto>();
             CreateMap<Entities.PokemonCard, Models.PokemonCardUpdateDto>();
+
+            CreateMap<Models.PokemonCardCreationDto, Entities.PokemonCard>();
+            CreateMap<Models.PokemonCardUpdateDto, Entities.PokemonCard>();
+
         }
     }
 }

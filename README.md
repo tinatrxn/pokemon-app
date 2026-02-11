@@ -1,4 +1,4 @@
-# Getting Started 
+# Getting Started
 
 API:
 - Open the pokemon-app.sln Solution file in Visual Studio

@@ -34,14 +34,23 @@ namespace api.Controllers
 
             var bindersDto = _mapper.Map<List<BinderDto>>(binders);
             return Ok(bindersDto);
+        }
+        [HttpGet("{BinderId}", Name = "GetBinder")]
+        public async Task<ActionResult<BinderDetailsDto>> GetBinder(int BinderId)
+        {
+            var binder = await _context.Binders
+                .Include(i => i.PokemonCard)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(b => b.BinderId == BinderId);
 
-            //return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            //{
-            //    Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            //    TemperatureC = Random.Shared.Next(-20, 55),
-            //    Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            //})
-            //.ToArray();
+            if (binder == null)
+            {
+                return NotFound();
+            }
+
+            var binderDetailsDto = _mapper.Map<BinderDetailsDto>(binder);
+
+            return Ok(binderDetailsDto);
         }
     }
 }

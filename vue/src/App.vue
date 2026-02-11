@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import WeatherForecast from './components/WeatherForecast.vue'
+import { RouterView, RouterLink } from 'vue-router'
+
 </script>
 
 <template>
-  <WeatherForecast />
+  <h1>hello</h1>
+    <RouterLink :to="{ name: 'binder-list' }">
+      <button class="refresh-button">home</button>
+    </RouterLink>
+  <RouterView />
 </template>
 
 <style scoped>

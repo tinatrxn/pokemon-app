@@ -1,81 +1,68 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-type BinderItem = {
-  binderId: number;
-  name: string;
-  cardCount: number;
-  pokemonCard: BinderCardsItem[];
-};
+import { useRouter } from 'vue-router'
+import { getPokemonCardById, deletePokemonCard , type pokemonCardItem } from '../services/PokemonCardService'
 
-type BinderCardsItem = {
-  pokemonCardId: number;
-  name: string;
-  set: string;
-  number: string;
-};
+const props = defineProps<{
+  pokemonCardId: string,
+  binderId: string
+}>()
 
-const binders = ref<BinderItem[]>();
-// const binderCards = ref<BinderCardsItem[]>();
+const card = ref<pokemonCardItem>();
 const error = ref<string>();
 const loading = ref(false);
 
+const cardId = Number(props.pokemonCardId)
+const binderId = Number(props.binderId)
 
-onMounted(async () => {
-  await fetchBinders();
-});
+onMounted(loadPokemonCardDetails)
 
-async function fetchBinders() {
-  loading.value = true;
+async function loadPokemonCardDetails() {
+  loading.value = true
+  error.value = undefined
+
   try {
-    const response = await fetch('https://localhost:7221/Binders');
-    binders.value = await response.json();
+    card.value = await getPokemonCardById(cardId)
   } catch (err) {
-    error.value = err instanceof Error ? err.message : String(err);
+    error.value = err instanceof Error ? err.message : 'Something went wrong'
   } finally {
-    loading.value = false;
+    loading.value = false
   }
 }
 
-// async function fetchBinderCards() {
-//   loading.value = true;
-//   try {
-//     const response = await fetch('https://localhost:7221/Binders');
-//     binders.value = await response.json();
-//   } catch (err) {
-//     error.value = err instanceof Error ? err.message : String(err);
-//   } finally {
-//     loading.value = false;
-//   }
-// }
+const router = useRouter()
+
+const deleteCard = async (cardId: number, binderId: number) => {
+    await deletePokemonCard(cardId)
+    console.log('Saved successfully')
+    router.push({
+        name: 'binder-details',
+        params: { binderId: binderId }
+    })
+}
+
 </script>
 
 <template>
   <div class="weather-app">
     <h1>
-      Weather Forecast
-      <button v-if="!loading" @click="fetchBinders" class="refresh-button">Refresh</button>
+      Pokemon Card Binder
+      <button v-if="!loading" @click="loadPokemonCardDetails" class="refresh-button">Refresh</button>
     </h1>
 
     <div v-if="loading" class="loading">Loading...</div>
     <div v-else-if="error" class="error">Error: {{ error }}</div>
-    <div v-else class="forecast-container">
-      <div
-        v-for="binder in binders"
-        :key="binder.binderId"
-        class="forecast-card"
-      >
-        <!-- <div class="date">{{ new Date(forecast.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) }}</div>> -->
-        <div class="temperature">{{ binder.name }}</div>
-        <div class="summary">{{ binder.cardCount }}</div>
-        <div
-          v-for="card in binder.pokemonCard"
-          :key="card.pokemonCardId"
-          class="forecast-card">
+    <div v-else-if="card" class="forecast-container">
+      <div class="forecast-card">
           <p>{{ card.name }}</p>
           <p>{{ card.set }}</p>
           <p>{{ card.number }}</p>
-        </div>
       </div>
+      <RouterLink
+        :to="{ name: 'pokemon-card-edit', params: { pokemonCardId: card.pokemonCardId } }"
+        ><button class="refresh-button">edit</button>
+        </RouterLink>
+        <button @click="deleteCard(cardId, binderId)"> delete </button>
     </div>
   </div>
 </template>

@@ -4,7 +4,7 @@
     {
         public int BinderId { get; set; }
         public string Name { get; set; } = string.Empty;
-        public List<PokemonCardDto> Cards { get; set; }
+        public ICollection<PokemonCardDto> PokemonCard { get; set; }
         = new List<PokemonCardDto>();
         
     }
