@@ -25,7 +25,7 @@ const router = createRouter({
             component: PokemonCardAdd
         },
         {
-            path: '/binders/:binderId',
+            path: '/binders/:binderId/page/:currentPage',
             name: 'binder-details',
             props: true,
             component: BinderDetails

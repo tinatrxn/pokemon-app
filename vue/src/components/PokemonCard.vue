@@ -11,10 +11,12 @@ defineProps({
 <template>
     <RouterLink
         :to="{ name: 'pokemon-card-details', params: { pokemonCardId: card.pokemonCardId , binderId: card.binderId } }"
-        class="forecast-card">
-        <p>{{ card.name }}</p>
-        <p>{{ card.set }}</p>
-        <p>{{ card.number }}</p>
+        class="">
+        <div class="pokemon-card">
+          <p class="intro">{{ card.name }}</p>
+          <p class="intro">{{ card.set }}</p>
+          <p class="intro">{{ card.number }}</p>
+        </div>
     </RouterLink>
 </template>
 

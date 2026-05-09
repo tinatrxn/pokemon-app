@@ -1,26 +1,32 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { getBinderById, type BinderItem } from '../services/BinderService'
+import { onMounted, ref, watch } from 'vue'
+import { getBinderById, type BinderItem , type PaginationMetadata} from '../services/BinderService'
 import PokemonCard from '../src/components/PokemonCard.vue'
 
 
 const props = defineProps<{
-  binderId: string
+  binderId: string,
+  currentPage: string
 }>()
 
 const binder = ref<BinderItem>();
+const pagination = ref<PaginationMetadata>();
 const error = ref<string>();
 const loading = ref(false);
 
 
 onMounted(loadBinderDetails)
+watch(() => props.currentPage, loadBinderDetails)
 
 async function loadBinderDetails() {
+  console.log('loading page:', props.currentPage, 'binderId:', props.binderId)
   loading.value = true
   error.value = undefined
 
   try {
-    binder.value = await getBinderById(Number(props.binderId))
+    const { binder: binderData, pagination: paginationData }  = await getBinderById(Number(props.binderId), Number(props.currentPage))
+    binder.value = binderData
+    pagination.value = paginationData
   } catch (err) {
     error.value = err instanceof Error ? err.message : 'Something went wrong'
   } finally {
@@ -28,21 +34,19 @@ async function loadBinderDetails() {
   }
 }
 
+//calculate pagenumber for last page
+
 </script>
 
 <template>
-  <div class="weather-app">
-    <h1>
-      Pokemon Card Binder
-      <button v-if="!loading" @click="loadBinderDetails" class="refresh-button">Refresh</button>
-    </h1>
+  <div class="view">
+    <Button v-if="!loading" @click="loadBinderDetails" class="home-button">Refresh</button>
 
     <div v-if="loading" class="loading">Loading...</div>
     <div v-else-if="error" class="error">Error: {{ error }}</div>
-    <div v-else-if="binder" class="forecast-container">
-      <div class="forecast-card">
-        <div class="temperature">{{ binder.name }}</div>
-        <div class="summary">{{ binder.cardCount }}</div>
+    <div v-else-if="binder">
+      <h1>{{ binder.name }} - {{ binder.cardCount }}</h1>
+      <div class="columns-3 gap-10">
         <PokemonCard
           v-for="card in binder.pokemonCard"
           :key="card.pokemonCardId"
@@ -50,7 +54,13 @@ async function loadBinderDetails() {
       </div>
       <RouterLink
         :to="{ name: 'pokemon-card-add', params: { binderId: binderId } }"
-        ><button class="refresh-button">add card</button>
+        >
+        <Button label="Add a card"/>
+      </RouterLink>
+      <RouterLink
+        :to="{ name: 'binder-details', params: { binderId: props.binderId, currentPage: Number(props.currentPage) + 1 } }"
+      >
+      next page
       </RouterLink>
     </div>
   </div>

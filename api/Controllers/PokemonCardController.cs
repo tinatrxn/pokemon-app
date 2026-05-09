@@ -23,13 +23,26 @@ namespace api.Controllers
         }
 
         [HttpGet(Name = "GetCards")]
-        public async Task<IActionResult> GetAllCards()
+        public async Task<IActionResult> GetAllCards(string? name)
         {
-            var cards = await _context.PokemonCards
+            if (string.IsNullOrEmpty(name))
+            {
+                var cards = await _context.PokemonCards
+                    .OrderBy(x => x.Name)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                return Ok(_mapper.Map<List<PokemonCardDto>>(cards));
+            }
+
+            name = name.Trim();
+
+            var filteredCards = await _context.PokemonCards
                 .AsNoTracking()
+                .Where(c => c.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
                 .ToListAsync();
 
-            var cardsDto = _mapper.Map<List<PokemonCardDto>>(cards);
+            var cardsDto = _mapper.Map<List<PokemonCardDto>>(filteredCards);
             return Ok(cardsDto);
         }
 

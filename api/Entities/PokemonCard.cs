@@ -15,5 +15,6 @@ namespace api.Entities
         {
             Name = name;
         }
+        public int SortNumber { get; set; }
     }
 }

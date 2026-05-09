@@ -36,7 +36,7 @@ const saveCard = async (updatedCard: pokemonCardItem) => {
     await updatePokemonCard(updatedCard)
     router.push({
         name: 'pokemon-card-details',
-        params: { pokemonCardId: updatedCard.pokemonCardId }
+        params: { pokemonCardId: props.pokemonCardId }
     })
 }
 
