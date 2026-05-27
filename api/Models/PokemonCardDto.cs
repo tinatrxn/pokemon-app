@@ -8,5 +8,6 @@
         public string Number { get; set; } = string.Empty;
         public int BinderId { get; set; }
         public int SortNumber { get; set; }
+        public string ImageUrl { get; set; } = string.Empty;
     }
 }

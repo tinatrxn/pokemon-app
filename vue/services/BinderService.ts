@@ -17,13 +17,14 @@ export type BinderCardsItem = {
   name: string
   set: string
   number: string
+  imageUrl: string
 }
 
 export type PaginationMetadata = {
-  totalCardCount: number
-  pageSize: number
-  currentPage: number
-  totalPageCount: number
+  TotalCardCount: number
+  PageSize: number
+  CurrentPage: number
+  TotalPageCount: number
 }
 
 export async function getBinders(): Promise<BinderItem[]> {

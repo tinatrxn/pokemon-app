@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tailwindcss-primeui";
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -29,10 +30,6 @@ h1 {
 
 .home-button {
   margin-bottom: 1em;
-}
-
-.view {
-
 }
 
 .loading, .error {
@@ -81,16 +78,31 @@ h1 {
   color: #595758;
 }
 
-.pokemon-card {
-  flex: 0 0 180px;
+.binder-page {
   background: linear-gradient(135deg, var(--p-pink-50) 20%, var(--p-pink-200) 100%);
   border-radius: 12px;
   padding: 2rem;
-  padding-bottom: 7rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
+}
+
+.pokemon-card {
+  padding: 1em;
+  padding-right: 2em;
+  background: linear-gradient(135deg, var(--p-pink-50) 20%, var(--p-pink-100) 100%);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: center;
+}
+
+.card-image {
+  width: 80%;
+  aspect-ratio: 5 / 7;
+}
+
+.card-text {
+  font-size: smaller;
 }
 
 .refresh-button {

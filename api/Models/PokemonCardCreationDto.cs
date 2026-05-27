@@ -6,6 +6,7 @@
         public string Set { get; set; } = string.Empty;
         public string Number { get; set; } = string.Empty;
         public int BinderId { get; set; }
+        public string ImageUrl { get; set; } = string.Empty;
 
     }
 }

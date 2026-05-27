@@ -12,7 +12,7 @@
             TotalCardCount = totalCardCount;
             PageSize = pageSize;
             CurrentPage = currentPage;
-            TotalPageCount = (int)Math.Ceiling(totalCardCount / (double)pageSize);
+            TotalPageCount = (int)Math.Ceiling(totalCardCount / (double)9);
         }
     }
 }

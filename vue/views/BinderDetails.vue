@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { getBinderById, type BinderItem , type PaginationMetadata} from '../services/BinderService'
 import PokemonCard from '../src/components/PokemonCard.vue'
-
 
 const props = defineProps<{
   binderId: string,
@@ -13,13 +12,17 @@ const binder = ref<BinderItem>();
 const pagination = ref<PaginationMetadata>();
 const error = ref<string>();
 const loading = ref(false);
+const previousPage = computed(() => Math.max(1, Number(props.currentPage) - 1))
+const nextPage = computed(() => Math.min(pagination.value?.TotalPageCount ?? 1, Number(props.currentPage) + 1))
+const isLastPage = computed(() => Number(props.currentPage) === pagination.value?.TotalPageCount)
+const isFirstPage = computed(() => Number(props.currentPage) === 1)
 
 
 onMounted(loadBinderDetails)
 watch(() => props.currentPage, loadBinderDetails)
 
 async function loadBinderDetails() {
-  console.log('loading page:', props.currentPage, 'binderId:', props.binderId)
+
   loading.value = true
   error.value = undefined
 
@@ -27,14 +30,14 @@ async function loadBinderDetails() {
     const { binder: binderData, pagination: paginationData }  = await getBinderById(Number(props.binderId), Number(props.currentPage))
     binder.value = binderData
     pagination.value = paginationData
+      console.log('cards:', binder.value, 'binderId:', props.binderId)
+
   } catch (err) {
     error.value = err instanceof Error ? err.message : 'Something went wrong'
   } finally {
     loading.value = false
   }
 }
-
-//calculate pagenumber for last page
 
 </script>
 
@@ -45,24 +48,37 @@ async function loadBinderDetails() {
     <div v-if="loading" class="loading">Loading...</div>
     <div v-else-if="error" class="error">Error: {{ error }}</div>
     <div v-else-if="binder">
-      <h1>{{ binder.name }} - {{ binder.cardCount }}</h1>
-      <div class="columns-3 gap-10">
-        <PokemonCard
-          v-for="card in binder.pokemonCard"
-          :key="card.pokemonCardId"
-          :card="card"/>
+      <h1>{{ binder.name }} - {{  pagination?.TotalCardCount }}</h1>
+      <div class="grid grid-cols-4 gap-1">
+        <div class="col-span-3 grid grid-cols-3 gap-1 justify-items-center binder-page">
+          <PokemonCard
+            v-for="card in binder.pokemonCard"
+            :key="card.pokemonCardId"
+            :card="card"/>
+        </div>
+        <div class="addstuff flex items-center ">
+          <RouterLink
+            :to="{ name: 'pokemon-card-add', params: { binderId: binderId } }"
+            >
+            <Button label="Add a card"/>
+          </RouterLink>
+          <div v-if="!isFirstPage">
+            <RouterLink
+              :to="`/binders/${props.binderId}/page/${previousPage}`"
+            >
+              <Button icon="pi pi-angle-left"/>
+            </RouterLink>
+          </div>
+          <div v-if="!isLastPage">
+            <RouterLink
+              :to="`/binders/${props.binderId}/page/${nextPage}`"
+            >
+              <Button icon="pi pi-angle-right"/>
+            </RouterLink>
+          </div>
+        </div>
       </div>
-      <RouterLink
-        :to="{ name: 'pokemon-card-add', params: { binderId: binderId } }"
-        >
-        <Button label="Add a card"/>
-      </RouterLink>
-      <RouterLink
-        :to="{ name: 'binder-details', params: { binderId: props.binderId, currentPage: Number(props.currentPage) + 1 } }"
-      >
-      next page
-      </RouterLink>
-    </div>
+  </div>
   </div>
 </template>
 

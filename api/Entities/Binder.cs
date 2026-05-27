@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
+// don't forget to update the database 
+// Add-Migration MigrationName
+// Update-Database
 namespace api.Entities
 {
     public class Binder

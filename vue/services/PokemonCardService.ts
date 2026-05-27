@@ -5,6 +5,7 @@ export type pokemonCardItem = {
   name: string
   set: string
   number: string
+  imageUrl: string
 }
 
 export type pokemonCardItemAdd = {
@@ -12,6 +13,7 @@ export type pokemonCardItemAdd = {
   set: string
   number: string
   binderId: number
+  imageUrl: string
 }
 
 export async function getPokemonCards(): Promise<pokemonCardItem[]> {

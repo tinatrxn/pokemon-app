@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-
+// don't forget to update the database 
+// Add-Migration MigrationName
+// Update-Database
 namespace api.Entities
 {
     public class PokemonCard
@@ -16,5 +18,6 @@ namespace api.Entities
             Name = name;
         }
         public int SortNumber { get; set; }
+        public string ImageUrl { get; set; } = string.Empty;
     }
 }
