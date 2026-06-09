@@ -79,7 +79,7 @@ h1 {
 }
 
 .binder-page {
-  background: linear-gradient(135deg, var(--p-pink-50) 20%, var(--p-pink-200) 100%);
+  background-color: oklch(94.8% 0.028 342.258);
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -89,9 +89,9 @@ h1 {
 .pokemon-card {
   padding: 1em;
   padding-right: 2em;
-  background: linear-gradient(135deg, var(--p-pink-50) 20%, var(--p-pink-100) 100%);
+  background-color: oklch(97.1% 0.014 343.198);
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: center;
 }

@@ -14,7 +14,8 @@ const card = ref<pokemonCardItemAdd>({
     name: '',
     set: '',
     number: '',
-    binderId: binderid
+    binderId: binderid,
+    imageUrl: ''
 });
 
 const router = useRouter()
@@ -24,7 +25,7 @@ const addCard = async (newCard: pokemonCardItemAdd) => {
     console.log('Saved successfully')
     router.push({
         name: 'binder-details',
-        params: { binderId: props.binderId }
+        params: { binderId: props.binderId, currentPage: 1 }
     })
 }
 

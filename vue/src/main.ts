@@ -7,6 +7,8 @@ import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura'
 import Button from "primevue/button"
 import 'primeicons/primeicons.css'
+import { Form } from '@primevue/forms';
+
 
 const myPreset = definePreset(Aura, {
     semantic: {
